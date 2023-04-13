@@ -4,7 +4,19 @@ import Alamofire
 class CompanionViewModel: ObservableObject {
 	@Published private(set) var users: [User]!
 	@Published private(set) var token: Token!
+	@Published private(set) var detailedUser: DetailedUser!
 	let url = "https://api.intra.42.fr/v2/users"
+	let decoder: JSONDecoder = {
+		let decoder = JSONDecoder()
+		decoder.keyDecodingStrategy = .convertFromSnakeCase
+		let formatter = DateFormatter()
+		formatter.calendar = Calendar(identifier: .iso8601)
+		formatter.locale = Locale(identifier: "en_US_POSIX")
+		formatter.timeZone = TimeZone(secondsFromGMT: 0)
+		formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
+		decoder.dateDecodingStrategy = .formatted(formatter)
+		return decoder
+	}()
 	
 	func loginButtonAction() {
 		
@@ -75,19 +87,27 @@ class CompanionViewModel: ObservableObject {
 		]
 		AF.request(afUrl)
 	}
+	func fetchCompleteUserData(login: String) {
+		let url = "https://api.intra.42.fr/v2/users/\(login)"
+		let headers: HTTPHeaders = [
+			"Authorization":"\(token?.tokenType ?? "") \(token?.accessToken ?? "")"
+		]
+		AF.request(url, headers: headers)
+			.validate()
+			.responseDecodable(of: DetailedUser.self, decoder: decoder) { response in
+				switch response.result {
+				case .success(let user):
+					self.detailedUser = user
+					print("success: \(String(describing: self.detailedUser))")
+					break
+				case .failure(let error):
+					print("error: \(error)")
+				}
+			}
+	}
 	
 	func findUser(login: String) {
-		let decoder: JSONDecoder = {
-			let decoder = JSONDecoder()
-			decoder.keyDecodingStrategy = .convertFromSnakeCase
-			let formatter = DateFormatter()
-			formatter.calendar = Calendar(identifier: .iso8601)
-			formatter.locale = Locale(identifier: "en_US_POSIX")
-			formatter.timeZone = TimeZone(secondsFromGMT: 0)
-			formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
-			decoder.dateDecodingStrategy = .formatted(formatter)
-			return decoder
-		}()
+
 		let headers: HTTPHeaders = [
 			"Authorization":"\(token?.tokenType ?? "") \(token?.accessToken ?? "")"
 		]
@@ -98,7 +118,11 @@ class CompanionViewModel: ObservableObject {
 		if login.count > 2 {
 			AF.request(url, parameters: param, headers: headers)
 				.validate()
+//				.responseString(completionHandler: { response in
+//					print(response)
+//				})
 				.responseDecodable(of: [User].self, decoder: decoder) { response in
+//					print(response)
 					switch response.result {
 					case .success(let users):
 						self.users = users

@@ -8,27 +8,23 @@
 import SwiftUI
 
 struct UserView: View {
-//	@ObservedObject var viewModel: CompanionViewModel
-	@State var user: User
-//	@State var selectedCursus: String = viewModel.users?.first?.c
-	
-//    var body: some View {
-//		VStack {
-//			Text(viewModel.users?.first?.login ?? "")
-//			Text(viewModel.users?.first?.email ?? "")
-//		}
-//    }
+	let user: User
+	@EnvironmentObject var viewModel: CompanionViewModel
+	@State var pickerState: Int = 0
+//	@State var cursusUsers: [CursusUsers]
+
+
 	var body: some View {
 		ScrollView {
 			VStack {
-				Text(user.login ?? "")//viewModel.users?.first?.login ?? "")
+				Text(user.login ?? "")
 					.font(.title)
 				HStack {
 					VStack {
 						HStack {
 							Text("Wallet")
 							Spacer()
-							Text(String(user.wallet))//viewModel.users?.first?.wallet ?? 0))
+							Text(String(user.wallet))
 								.frame(minWidth: 100)
 								.frame(alignment: .center)
 						}
@@ -44,9 +40,21 @@ struct UserView: View {
 						HStack {
 							Text("Cursus")
 							Spacer()
-							Text("42 cursus")
-								.frame(minWidth: 100)
-								.frame(alignment: .center)
+							if viewModel.detailedUser == nil {
+								Text("loading")
+									.frame(minWidth: 100)
+									.frame(alignment: .center)
+							} else {
+//								cursusUsers = viewModel.detailedUser.cursusUsers
+								Picker("Cursus", selection: $pickerState) {
+									ForEach (0..<viewModel.detailedUser.cursusUsers.count, id: \.self) { id in
+//										HStack {
+										Text("\(viewModel.detailedUser.cursusUsers[id].cursus.name) \(id)")
+//											Text("\(pickerState)")
+//										}
+									}
+								}
+							}
 						}
 						.padding(.vertical, 5)
 						HStack {
@@ -89,7 +97,7 @@ struct UserView: View {
 				}
 				.padding(10)
 				
-				ProgressView(value: 0.4)
+				ProgressView(value: viewModel.detailedUser == nil ? 0 : (viewModel.detailedUser.cursusUsers[pickerState].level).truncatingRemainder(dividingBy: 1))
 					.padding(10)
 					.accentColor(Color.green)
 					.scaleEffect(x: 1, y: 4, anchor: .center)

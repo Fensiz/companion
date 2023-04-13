@@ -2,12 +2,12 @@ import SwiftUI
 
 struct MainView: View {
 	@EnvironmentObject var viewModel: CompanionViewModel
+	@State var users: [User]!
 	@State var login: String = ""
-	@State private var path = NavigationPath()
 
 	
     var body: some View {
-		NavigationStack(path: $path) {
+		NavigationStack() {
 			VStack {
 				ZStack {
 					Text("")
@@ -22,12 +22,10 @@ struct MainView: View {
 						.font(.title)
 						.foregroundColor(.black)
 						.frame(height: 50)
-
 						.padding(.horizontal)
 						.overlay(
 							RoundedRectangle(cornerRadius: 25)
 								.stroke(.blue, lineWidth: 2)
-
 						)
 				}
 				.padding(.top, 30)
@@ -40,27 +38,18 @@ struct MainView: View {
 						ForEach(users, id: \.self) { user in
 							NavigationLink {
 								UserView(user: user)
+									.onAppear() {
+										viewModel.fetchCompleteUserData(login: user.login!)
+									}
 							} label: {
 								Text(user.login ?? "")
 							}
-//							Text(viewModel.users[id].login ?? "")
-//							Button(user.login ?? "", action: {
-//								path.append("UserView")
-//								print(id)
-//							})
-//							.navigationDestination(for: String.self) { view in
-//								if view == "UserView" {
-//									
-//									UserView(user: viewModel.users[id])
-//								}
-//							}
 						}
 					}
 				}
 				Spacer(minLength: 20)
 				CompanionButton(action: {
 					viewModel.findUser(login: login)
-//					path.append("UserView")
 				}, label: "Show")
 				.font(.title)
 				.shadow(radius: 10, x: 10, y: 10)

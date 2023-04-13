@@ -141,3 +141,7 @@ struct Token: Codable, CustomDebugStringConvertible {
 
 let token = Token(accessToken: "123", tokenType: "123", expiresIn: 1, refreshToken: "123", scope: "123", createdAt: 1)
 print(token)
+
+for _ in 1...64 {
+	print(["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"].randomElement()!, terminator: "")
+}

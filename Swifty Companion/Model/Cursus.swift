@@ -1,6 +1,6 @@
 import Foundation
 
-class Cursus: Codable {
+struct Cursus: Codable {
 	let id: Int
 	let createdAt: Date?
 	let name: String
