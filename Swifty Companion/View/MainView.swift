@@ -29,10 +29,10 @@ struct MainView: View {
 						)
 				}
 				.padding(.top, 30)
-				
+				.frame(maxWidth: 330)
 				.compositingGroup()
 				.shadow(radius: 10, x: 10, y: 10)
-				Spacer(minLength: 20)
+				Spacer(minLength: 35)
 				if let users = viewModel.users {
 					List {
 						ForEach(users, id: \.self) { user in
@@ -46,8 +46,9 @@ struct MainView: View {
 							}
 						}
 					}
+					.listStyle(.plain)
 				}
-				Spacer(minLength: 20)
+				Spacer(minLength: 35)
 				CompanionButton(action: {
 					viewModel.findUser(login: login)
 				}, label: "Show")
@@ -56,7 +57,7 @@ struct MainView: View {
 
 				.padding(.bottom, 10)
 			}
-			.frame(maxWidth: 330)
+//
 //			.navigationTitle("Navigation")
 		}
     }

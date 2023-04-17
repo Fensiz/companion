@@ -5,6 +5,7 @@ class CompanionViewModel: ObservableObject {
 	@Published private(set) var users: [User]!
 	@Published private(set) var token: Token!
 	@Published private(set) var detailedUser: DetailedUser!
+	@Published var showAlert: Bool = false
 	let url = "https://api.intra.42.fr/v2/users"
 	let decoder: JSONDecoder = {
 		let decoder = JSONDecoder()
@@ -66,27 +67,28 @@ class CompanionViewModel: ObservableObject {
 					print("success: \(token)")
 				case .failure(let error):
 					print("error: \(error)")
+					self.showAlert.toggle()
 				}
 		}
 	}
-	func getCursus() {
-		let afUrl = "https://api.intra.42.fr/v2/cursus"
-		let decoder: JSONDecoder = {
-			let decoder = JSONDecoder()
-			decoder.keyDecodingStrategy = .convertFromSnakeCase
-			let formatter = DateFormatter()
-			formatter.calendar = Calendar(identifier: .iso8601)
-			formatter.locale = Locale(identifier: "en_US_POSIX")
-			formatter.timeZone = TimeZone(secondsFromGMT: 0)
-			formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
-			decoder.dateDecodingStrategy = .formatted(formatter)
-			return decoder
-		}()
-		let headers: HTTPHeaders = [
-			"Authorization":"\(token?.tokenType ?? "") \(token?.accessToken ?? "")"
-		]
-		AF.request(afUrl)
-	}
+//	func getCursus() {
+//		let afUrl = "https://api.intra.42.fr/v2/cursus"
+//		let decoder: JSONDecoder = {
+//			let decoder = JSONDecoder()
+//			decoder.keyDecodingStrategy = .convertFromSnakeCase
+//			let formatter = DateFormatter()
+//			formatter.calendar = Calendar(identifier: .iso8601)
+//			formatter.locale = Locale(identifier: "en_US_POSIX")
+//			formatter.timeZone = TimeZone(secondsFromGMT: 0)
+//			formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
+//			decoder.dateDecodingStrategy = .formatted(formatter)
+//			return decoder
+//		}()
+//		let headers: HTTPHeaders = [
+//			"Authorization":"\(token?.tokenType ?? "") \(token?.accessToken ?? "")"
+//		]
+//		AF.request(afUrl)
+//	}
 	func fetchCompleteUserData(login: String) {
 		let url = "https://api.intra.42.fr/v2/users/\(login)"
 		let headers: HTTPHeaders = [

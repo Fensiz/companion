@@ -2,7 +2,7 @@ import Foundation
 
 struct APIValues {
 	static let UID: String = "u-s4t2ud-730cb9baad70804f25a11099dc3fb0a94cfe2a80ebf43be52b8f2a0873b72838"
-	static let secret: String = "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"
+	static let secret: String = "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"
 	static let address: String = "https://api.intra.42.fr"
 	static let url: URLComponents = {
 		var components = URLComponents()

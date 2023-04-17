@@ -39,46 +39,72 @@ struct TestView2: View {
 	@State private var path: [Color] = []
  
 	var body: some View {
- 
-		NavigationStack(path: $path) {
-			List(bgColors, id: \.self) { bgColor in
- 
-				NavigationLink(value: bgColor) {
-					Text(bgColor.description)
-				}
- 
-			}
-			.listStyle(.plain)
- 
-			.navigationDestination(for: Color.self) { color in
-				VStack {
-					Text("\(path.count), \(path.description)")
-						.font(.headline)
- 
-					HStack {
-						ForEach(path, id: \.self) { color in
-							color
-								.frame(maxWidth: .infinity, maxHeight: .infinity)
-						}
- 
+		VStack {
+			NavigationStack(path: $path) {
+				List(bgColors, id: \.self) { bgColor in
+					
+					NavigationLink(value: bgColor) {
+						Text(bgColor.description)
 					}
- 
-					List(bgColors, id: \.self) { bgColor in
- 
-						NavigationLink(value: bgColor) {
-							Text(bgColor.description)
-						}
- 
-					}
-					.listStyle(.plain)
- 
+					
 				}
+				.listStyle(.plain)
+				
+				.navigationDestination(for: Color.self) { color in
+					VStack {
+						Text("\(path.count), \(path.description)")
+							.font(.headline)
+						
+						HStack {
+							ForEach(path, id: \.self) { color in
+								color
+									.frame(maxWidth: .infinity, maxHeight: .infinity)
+							}
+							
+						}
+						
+						List(bgColors, id: \.self) { bgColor in
+							
+							NavigationLink(value: bgColor) {
+								Text(bgColor.description)
+							}
+							
+						}
+						.listStyle(.plain)
+						
+					}
+				}
+				
+				.navigationTitle("Color")
+				
 			}
- 
-			.navigationTitle("Color")
- 
+			Text("Test")
+				.font(.largeTitle)
+				.padding()
+				.background(
+					RoundedRectangle(cornerRadius: 10)
+						.foregroundColor(.blue)
+						.shadow(color: Color.black.opacity(1.0), radius: 10, x: 10, y: 10)
+						.overlay(
+							RoundedRectangle(cornerRadius: 10)
+								.stroke()
+								.foregroundColor(.red)
+								
+						)
+				)
+								Text("Hello, world!")
+									.font(.title)
+									.foregroundColor(Color.black)
+									.padding()
+									.background(RoundedRectangle(cornerRadius: 10)
+										.fill(Color.white)
+									)
+									.compositingGroup()     // << here !!
+									.shadow(color: Color.black.opacity(1), radius: 5, x: 10, y: 10) // << shadow to all composition
+			
 		}
- 
+
+		
 	}
 }
 

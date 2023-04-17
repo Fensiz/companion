@@ -145,3 +145,9 @@ print(token)
 for _ in 1...64 {
 	print(["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"].randomElement()!, terminator: "")
 }
+
+
+
+let s = String(format: "Level %2$.0f %1$.2f", 2.2, 20.0)
+
+print(s)

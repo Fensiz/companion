@@ -20,6 +20,9 @@ struct ContentView: View {
 						}
 					}
 				}
+				.alert("Secret expired", isPresented: $viewModel.showAlert) {
+					Button("OK", role: .cancel, action: {})
+						}
 		} else {
 			MainView()
 		}

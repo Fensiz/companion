@@ -109,6 +109,7 @@ struct TestView: View {
 					)
 					.compositingGroup()     // << here !!
 					.shadow(color: Color.black.opacity(1), radius: 5, x: 10, y: 10) // << shadow to all composition
+				
 //				Text()
 			}
 		}
